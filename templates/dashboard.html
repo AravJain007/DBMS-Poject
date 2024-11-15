@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Welcome, {{ name }}!</h2>
+
+    <!-- Account Options -->
+    <div class="account-options">
+        <h3>Manage Your Account:</h3>
+        <ul>
+            <li><a href="{{ url_for('update_customer') }}">Update Your Details</a></li>
+            <li><a href="{{ url_for('delete_customer') }}" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">Delete Customer</a></li>
+        </ul>
+    </div>
+
+    <!-- Accounts Section -->
+    <div class="account-list">
+        <h3>Your Accounts:</h3>
+        <ul>
+            {% for account in accounts %}
+                <li>
+                    <strong>Account No:</strong> {{ account[0] }}, 
+                    <strong>Type:</strong> {{ account[1] }}, 
+                    <strong>Balance:</strong> ${{ account[2] }}
+                    <br>
+                    <a href="{{ url_for('update_balance', account_no=account[0]) }}">Update Balance</a> | 
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Transactions Section -->
+    <div class="transaction-list">
+        <h3>Recent Transactions:</h3>
+        <ul>
+            {% for transaction in transactions %}
+                <li><strong>Account No:</strong> {{ transaction[0] }}, <strong>Date:</strong> {{ transaction[1] }}, <strong>Amount:</strong> ${{ transaction[2] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Logout -->
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul>
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
+<script>
+    function deleteCustomer() {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        fetch('{{ url_for("delete_customer") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '{{ url_for("register") }}';
+          } else {
+            alert('Error deleting customer. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again later.');
+        });
+      }
+    }
+</script>

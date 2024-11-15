@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Balance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Update Balance for Account No: {{ account_no }}</h2>
+    <form action="{{ url_for('update_balance', account_no=account_no) }}" method="POST">
+        <div class="form-group">
+            <style>
+                .radio-group {
+                  display: flex;
+                  flex-direction: row;
+                  gap: 1rem;
+                }
+                
+                .radio-group label {
+                  display: flex;
+                  align-items: center;
+                  cursor: pointer;
+                }
+                
+                .radio-group input[type="radio"] {
+                  appearance: none;
+                  -webkit-appearance: none;
+                  -moz-appearance: none;
+                  width: 1.25rem;
+                  height: 1.25rem;
+                  border-radius: 50%;
+                  border: 2px solid #ccc;
+                  outline: none;
+                  margin-right: 0.5rem;
+                  transition: border-color 0.3s ease;
+                }
+                
+                .radio-group input[type="radio"]:checked {
+                  border-color: #4CAF50;
+                }
+                
+                .radio-group input[type="radio"]:checked::before {
+                  content: "";
+                  display: block;
+                  width: 0.75rem;
+                  height: 0.75rem;
+                  border-radius: 50%;
+                  background-color: #4CAF50;
+                  position: relative;
+                  left: 50%;
+                  top: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                </style>
+                
+                Transaction Type:
+                
+                <div class="radio-group">
+                  <label>
+                    <input type="radio" name="transaction_type" value="deposit"> Deposit
+                  </label>
+                  <label>
+                    <input type="radio" name="transaction_type" value="withdrawal"> Withdrawal
+                  </label>
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" step="0.01" required>
+        </div>
+        <button type="submit" class="btn">Submit</button>
+        <a href="{{ url_for('dashboard') }}" class="btn">Cancel</a>
+    </form>
+</body>
+</html>
